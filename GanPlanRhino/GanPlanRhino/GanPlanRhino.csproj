@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -53,12 +56,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AreaCalculation.cs" />
+    <Compile Include="GanPlanRhinoPanelCommand.cs" />
+    <Compile Include="GanPlanRhinoPanelViewModel.cs" />
+    <Compile Include="EtoPanels\GanPlanEtoPanel.cs" />
+    <Compile Include="EtoPanels\EtoPanel0.cs" />
+    <Compile Include="EtoPanels\EtoPanel1.cs" />
+    <Compile Include="EtoPanels\MainPanel.cs" />
+    <Compile Include="EtoPanels\NextBackButtons.cs" />
     <Compile Include="GanPlanRhinoCommand.cs" />
     <Compile Include="GanPlanRhinoPlugIn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Temp\ComputeGHhelper.cs" />
+    <Compile Include="Temp\RhinoComputeGH.cs" />
+    <Compile Include="Temp\Test1.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EmbeddedResources\plugin-utility.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

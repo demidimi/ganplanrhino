@@ -1,0 +1,9 @@
+C:\Users\kpflaptop\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\bin\GanPlanRhino.dll
+C:\Users\kpflaptop\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\bin\GanPlanRhino.pdb
+C:\Users\kpflaptop\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\bin\Newtonsoft.Json.dll
+C:\Users\kpflaptop\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\bin\Newtonsoft.Json.xml
+C:\Users\kpflaptop\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\obj\Debug\GanPlanRhino.csprojAssemblyReference.cache
+C:\Users\kpflaptop\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\obj\Debug\GanPlanRhino.csproj.CoreCompileInputs.cache
+C:\Users\kpflaptop\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\obj\Debug\GanPlanRhino.csproj.CopyComplete
+C:\Users\kpflaptop\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\obj\Debug\GanPlanRhino.dll
+C:\Users\kpflaptop\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\obj\Debug\GanPlanRhino.pdb
