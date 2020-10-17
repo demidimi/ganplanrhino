@@ -96,6 +96,9 @@ namespace GanPlanRhino
             }
             Rhino.RhinoDoc.ActiveDoc.Views.Redraw();
 
+            //get curves from the specific layer - rectangles
+            // bake curves to the correct new split curves layers
+
 
 
         }

@@ -14,12 +14,13 @@ namespace GanPlanRhino
         public static  List<Curve> IntersectCurves(List<Curve> curveList)
         {
             List<Curve> splitCurves = new List<Curve>();
-
-            for (int i = 0; i < curveList.Count; i += 1)
+            splitCurves.Add(curveList[0]);
+            RhinoApp.WriteLine("First curve added");
+            for (int i = 1; i < curveList.Count; i += 1)
             {
                 Curve[] newCurve = Curve.CreateBooleanDifference(curveList[i], splitCurves, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance);
                 splitCurves.AddRange(newCurve.ToList());
-                RhinoApp.WriteLine("i");
+                RhinoApp.WriteLine("splitting curve "  +i.ToString());
             }
             return splitCurves;
         }

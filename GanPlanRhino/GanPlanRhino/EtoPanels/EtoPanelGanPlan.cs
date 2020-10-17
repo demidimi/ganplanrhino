@@ -35,48 +35,49 @@ namespace GanPlanRhino
 
         private void InitializeComponent()
         {
-            
-            CallAPI = new RelayCommand<object>(obj => {
-                LayerHelper.CheckLayerStructure((schemeNameBox.Text+"::Rectangles"));
+
+            CallAPI = new RelayCommand<object>(obj =>
+            {
+                LayerHelper.CheckLayerStructure((schemeNameBox.Text + "::Rectangles"));
                 LayerHelper.CheckLayerStructure((schemeNameBox.Text + "::EJLT Shapes"));
             });
             CalcRecArea = new RelayCommand<object>(obj => { UpdateArea(schemeNameBox.Text + "::Rectangles", area); });
-            MakeEltjShapes = new RelayCommand<object>(obj => { message.Text = "MakeEltjShapes"; });
+            MakeEltjShapes = new RelayCommand<object>(obj => { IntersectNow(schemeNameBox.Text + "::Rectangles", schemeNameBox.Text + "::EJLT Shapes"); });
             UpdateEltjShapeAreas = new RelayCommand<object>(obj => { UpdateArea(schemeNameBox.Text + "::EJLT Shapes", area); });
             PlaceDoors = new RelayCommand<object>(obj => { message.Text = "PlaceDoors"; });
             Make3DGeometry = new RelayCommand<object>(obj => { message.Text = "Make3DGeometry"; });
 
 
             CallAPIButton = new Button
-                {
-                    Text = Rhino.UI.LOC.STR("Call API"),
-                    Command = CallAPI
-                };
+            {
+                Text = Rhino.UI.LOC.STR("Call API"),
+                Command = CallAPI
+            };
             CalcRecAreaButton = new Button
-                {
-                    Text = Rhino.UI.LOC.STR("Calc Rectangle Area"),
-                    Command = CalcRecArea
-                };
+            {
+                Text = Rhino.UI.LOC.STR("Calc Rectangle Area"),
+                Command = CalcRecArea
+            };
             MakeEltjShapesButton = new Button
-                {
-                    Text = Rhino.UI.LOC.STR("Cut Shapes"),
-                    Command = MakeEltjShapes
-                };
+            {
+                Text = Rhino.UI.LOC.STR("Cut Shapes"),
+                Command = MakeEltjShapes
+            };
             UpdateEltjShapeAreasButton = new Button
-                {
-                    Text = Rhino.UI.LOC.STR("Calc Shape Areas"),
-                    Command = UpdateEltjShapeAreas
-                };
+            {
+                Text = Rhino.UI.LOC.STR("Calc Shape Areas"),
+                Command = UpdateEltjShapeAreas
+            };
             PlaceDoorsButton = new Button
-                {
-                    Text = Rhino.UI.LOC.STR("Place Some Doors"),
-                    Command = PlaceDoors
-                };
+            {
+                Text = Rhino.UI.LOC.STR("Place Some Doors"),
+                Command = PlaceDoors
+            };
             Make3DGeometryButton = new Button
-                {
-                    Text = Rhino.UI.LOC.STR("See it in 3D"),
-                    Command = Make3DGeometry
-                };
+            {
+                Text = Rhino.UI.LOC.STR("See it in 3D"),
+                Command = Make3DGeometry
+            };
 
             message = new Label();
             message.Text = "Paste in URL to start!";
@@ -138,6 +139,30 @@ namespace GanPlanRhino
             List<Curve> curves = LayerHelper.GetCurvesFrom(
                         layerPath, out layerIndexs);
             area.Text = AreaCalc.UpdateArea(curves, layerIndexs);
+        }
+        public static void IntersectNow(string layerPath, string targetPath)
+        {
+            //initialize variables
+            List<int> layerIndexs;
+            List<Curve> c;
+            List<Curve> splitCurves;
+            string layerName;
+
+            //get curves from the specific layer - rectangles
+            c = LayerHelper.GetCurvesFrom(layerPath, out layerIndexs);
+
+            //split curves and bake to target layer
+            splitCurves = Intersect.IntersectCurves(c);
+            for (int i = 0; i < splitCurves.Count; i++)
+            {
+                layerName = Rhino.RhinoDoc.ActiveDoc.Layers[layerIndexs[i]].Name;
+                LayerHelper.BakeObjectToLayer(splitCurves[i], layerName, targetPath);
+                Rhino.RhinoApp.WriteLine("baking split curve {0} to layer {1} ", splitCurves[i].ToString(), layerName);
+            }
+            Rhino.RhinoDoc.ActiveDoc.Views.Redraw();
+
+
+
         }
     }
 }
