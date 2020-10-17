@@ -26,6 +26,7 @@ namespace GanPlanRhino
             m_panels = new GanPlanRhinoEtoPanel[]
             {
                 new EtoPanel0(this),
+                new EtoPanelGanPlan(this),
                 new EtoPanel1(this)
             };
 
