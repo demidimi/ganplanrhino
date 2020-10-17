@@ -38,7 +38,9 @@ namespace GanPlanRhino
 
         private void InitializeComponent()
         {
-            OpenWebPage = new RelayCommand<object>(obj => {  });
+            OpenWebPage = new RelayCommand<object>(obj => {
+                System.Diagnostics.Process.Start("https://optimus.emptybox.io/");
+            });
 
             CallAPI = new RelayCommand<object>(obj => {
                 LayerHelper.CheckLayerStructure((schemeNameBox.Text+"::Rectangles"));
