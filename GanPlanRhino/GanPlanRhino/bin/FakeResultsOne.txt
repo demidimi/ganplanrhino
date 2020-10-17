@@ -1,0 +1,134 @@
+{
+    "data": {
+        "iteration": 1,
+        "rooms": [
+            {
+                "rectangle": [
+                    [
+                        75.0,
+                        84.375
+                    ],
+                    [
+                        159.375,
+                        159.375
+                    ]
+                ],
+                "room": "Kitchen",
+                "roomColor": "#A4BC26"
+            },
+            {
+                "rectangle": [
+                    [
+                        140.625,
+                        150.0
+                    ],
+                    [
+                        187.5,
+                        187.5
+                    ]
+                ],
+                "room": "Kitchen",
+                "roomColor": "#A4BC26"
+            },
+            {
+                "rectangle": [
+                    [
+                        206.25,
+                        121.875
+                    ],
+                    [
+                        243.75,
+                        150.0
+                    ]
+                ],
+                "room": "Bathroom",
+                "roomColor": "#4D99D6"
+            },
+            {
+                "rectangle": [
+                    [
+                        150.0,
+                        121.875
+                    ],
+                    [
+                        215.625,
+                        159.375
+                    ]
+                ],
+                "room": "Kitchen",
+                "roomColor": "#A4BC26"
+            },
+            {
+                "rectangle": [
+                    [
+                        178.125,
+                        28.125
+                    ],
+                    [
+                        243.75,
+                        262.5
+                    ]
+                ],
+                "room": "Bedroom",
+                "roomColor": "#2B9C8D"
+            },
+            {
+                "rectangle": [
+                    [
+                        65.625,
+                        178.125
+                    ],
+                    [
+                        150.0,
+                        253.125
+                    ]
+                ],
+                "room": "Bedroom",
+                "roomColor": "#2B9C8D"
+            },
+            {
+                "rectangle": [
+                    [
+                        150.0,
+                        178.125
+                    ],
+                    [
+                        187.5,
+                        206.25
+                    ]
+                ],
+                "room": "Closet",
+                "roomColor": "#6C34BC"
+            },
+            {
+                "rectangle": [
+                    [
+                        150.0,
+                        234.375
+                    ],
+                    [
+                        187.5,
+                        262.5
+                    ]
+                ],
+                "room": "Closet",
+                "roomColor": "#6C34BC"
+            },
+            {
+                "rectangle": [
+                    [
+                        75.0,
+                        253.125
+                    ],
+                    [
+                        196.875,
+                        281.25
+                    ]
+                ],
+                "room": "Balcony",
+                "roomColor": "#DD5498"
+            }
+        ]
+    },
+    "status": "OK"
+}
