@@ -40,13 +40,18 @@ namespace GanPlanRhino
         {
             OpenWebPage = new RelayCommand<object>(obj => {
                 System.Diagnostics.Process.Start("https://optimus.emptybox.io/");
+                message.Text = "After Selecting a Scheme on the web, bring it into Rhino with an API call. ";
             });
 
             CallAPI = new RelayCommand<object>(obj => {
                 LayerHelper.CheckLayerStructure((schemeNameBox.Text+"::Rectangles"));
                 LayerHelper.CheckLayerStructure((schemeNameBox.Text + "::EJLT Shapes"));
+                message.Text = "Adjust the rectangles to match your desired area. ";
             });
-            CalcRecArea = new RelayCommand<object>(obj => { UpdateArea(schemeNameBox.Text + "::Rectangles", area); });
+            CalcRecArea = new RelayCommand<object>(obj => { 
+                UpdateArea(schemeNameBox.Text + "::Rectangles", area);
+                message.Text = "Cut out specific shapes of your rooms. ";
+            });
             MakeEltjShapes = new RelayCommand<object>(obj => { message.Text = "MakeEltjShapes"; });
             UpdateEltjShapeAreas = new RelayCommand<object>(obj => { UpdateArea(schemeNameBox.Text + "::EJLT Shapes", area); });
             PlaceDoors = new RelayCommand<object>(obj => { Doors.PlaceDoorsAt(schemeNameBox.Text); });
@@ -59,7 +64,7 @@ namespace GanPlanRhino
             };
             CallAPIButton = new Button
                 {
-                    Text = Rhino.UI.LOC.STR("Call API"),
+                    Text = Rhino.UI.LOC.STR("Call API for selected Scheme"),
                     Command = CallAPI
                 };
             CalcRecAreaButton = new Button
@@ -74,7 +79,7 @@ namespace GanPlanRhino
                 };
             UpdateEltjShapeAreasButton = new Button
                 {
-                    Text = Rhino.UI.LOC.STR("Calc Shape Areas"),
+                    Text = Rhino.UI.LOC.STR("Calc Shape Area"),
                     Command = UpdateEltjShapeAreas
                 };
             PlaceDoorsButton = new Button
@@ -125,7 +130,6 @@ namespace GanPlanRhino
                 null,
                 new Label { Text= "Name your Scheme: "},
                 schemeNameBox,
-                null,
                 CallAPIButton,
                 null,
                 area,
@@ -145,6 +149,7 @@ namespace GanPlanRhino
         private static void UpdateArea(string layerPath, Label area)
         {
             List<int> layerIndexs;
+            // TODO: first intersect them! 
             List<Curve> curves = LayerHelper.GetCurvesFrom(
                         layerPath, out layerIndexs);
             area.Text = AreaCalc.UpdateArea(curves, layerIndexs);
