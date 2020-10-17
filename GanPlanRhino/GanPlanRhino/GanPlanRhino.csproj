@@ -56,6 +56,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AreaCalc.cs" />
     <Compile Include="AreaCalculation.cs" />
     <Compile Include="Intersect.cs" />
     <Compile Include="LayerHelper.cs" />
