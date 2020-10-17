@@ -271,9 +271,10 @@ namespace GanPlanRhino
             }
         }
 
-        public static List<Curve> GetCurvesFrom(string fullLayerPath)
+        public static List<Curve> GetCurvesFrom(string fullLayerPath, out List<int> layerIndexs)
         {
             List<Curve> curves = new List<Curve>();
+            layerIndexs = new List<int>();
             RhinoDoc doc = RhinoDoc.ActiveDoc;
 
             // Read from Rhino Layer
@@ -292,11 +293,13 @@ namespace GanPlanRhino
                     if (c.IsClosed)
                     {
                         curves.Add(c);
+                        layerIndexs.Add(ob.Attributes.LayerIndex);
                     }
                 }
 
             }
             return curves;
         }
-}
+
+    }
 }

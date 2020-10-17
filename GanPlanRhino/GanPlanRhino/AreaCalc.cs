@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
+using Rhino;
 using Rhino.Geometry;
 
 namespace GanPlanRhino
@@ -20,10 +21,16 @@ namespace GanPlanRhino
             return areas;
         }
 
-        public static string UpdateArea (List<Curve> curves)
+        public static string UpdateArea (List<Curve> curves, List<int> layerIndexs)
         {
             double[] areas = AreaOf(curves);
-            return String.Join("", areas);
+            List<string> lines = new List<string>();
+            if (curves.Count != layerIndexs.Count) return "not same number of names and curves";
+            for (int i = 0; i < curves.Count; i++)
+            {
+                lines.Add(RhinoDoc.ActiveDoc.Layers[layerIndexs[i]].Name + ": " + areas[i] + " sqft");
+            }
+            return String.Join("\r\n", lines);
         }
     }
 }

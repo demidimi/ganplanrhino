@@ -26,7 +26,7 @@ namespace GanPlanRhino
         Label warning;
         TextBox urlInputBox;
         TextBox schemeNameBox;
-        Label area;
+        public Label area;
         public EtoPanelGanPlan(GanPlanRhinoPanelViewModel dataContext) : base(dataContext)
         {
             DataContext = dataContext;
@@ -37,12 +37,7 @@ namespace GanPlanRhino
         {
             
             CallAPI = new RelayCommand<object>(obj => { LayerHelper.CheckLayerStructure((schemeNameBox.Text+"::Rectangles")); });
-            CalcRecArea = new RelayCommand<object>(obj => {
-                area.Text = 
-                AreaCalc.UpdateArea(
-                    LayerHelper.GetCurvesFrom(
-                        schemeNameBox.Text + "::Rectangles"));
-            });
+            CalcRecArea = new RelayCommand<object>(obj => { UpdateArea(schemeNameBox.Text + "::Rectangles", area); });
             MakeEltjShapes = new RelayCommand<object>(obj => { message.Text = "MakeEltjShapes"; });
             UpdateEltjShapeAreas = new RelayCommand<object>(obj => { message.Text = "UpdateEltjShapeAreas"; });
             PlaceDoors = new RelayCommand<object>(obj => { message.Text = "PlaceDoors"; });
@@ -132,6 +127,14 @@ namespace GanPlanRhino
                 new TableRow(new NextBackButtons(ViewModel, false))
                 }
             };
+        }
+
+        private static void UpdateArea(string layerPath, Label area)
+        {
+            List<int> layerIndexs;
+            List<Curve> curves = LayerHelper.GetCurvesFrom(
+                        layerPath, out layerIndexs);
+            area.Text = AreaCalc.UpdateArea(curves, layerIndexs);
         }
     }
 }
