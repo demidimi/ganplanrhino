@@ -279,8 +279,16 @@ namespace GanPlanRhino
 
             // Read from Rhino Layer
             Layer layer = doc.Layers[doc.Layers.FindByFullPath(fullLayerPath, -1)];
-            Rhino.DocObjects.RhinoObject[] rhobjs = doc.Objects.FindByLayer(layer);
-            if (rhobjs == null || rhobjs.Length < 1)
+            Layer[] children = layer.GetChildren();
+
+            // read all objs from children layers
+            List<RhinoObject> rhobjs = new List<RhinoObject>();
+            foreach (Layer child in children)
+            {
+                rhobjs.AddRange(doc.Objects.FindByLayer(child));
+            }
+
+            if (rhobjs == null || rhobjs.Count < 1)
             {
                 RhinoApp.WriteLine("no object to be selected on this layer");
                 return curves;
