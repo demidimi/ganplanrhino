@@ -88,7 +88,7 @@ namespace GanPlanRhino
         {
             //split curves then bake them
             message.Text = "Intersecting curves";
-            splitCurves = Intersect.IntersectCurves(c);
+            //splitCurves = Intersect.IntersectCurves(c);
             message.Text = "Baking split curves";
             foreach (Curve i in splitCurves)
             {

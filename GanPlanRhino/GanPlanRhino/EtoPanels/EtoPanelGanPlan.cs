@@ -146,16 +146,17 @@ namespace GanPlanRhino
             List<int> layerIndexs;
             List<Curve> c;
             List<Curve> splitCurves;
+            List<int> layerIds;
             string layerName;
 
             //get curves from the specific layer - rectangles
             c = LayerHelper.GetCurvesFrom(layerPath, out layerIndexs);
 
             //split curves and bake to target layer
-            splitCurves = Intersect.IntersectCurves(c);
+            splitCurves = Intersect.IntersectCurves(c, layerIndexs, out layerIds);
             for (int i = 0; i < splitCurves.Count; i++)
             {
-                layerName = Rhino.RhinoDoc.ActiveDoc.Layers[layerIndexs[i]].Name;
+                layerName = Rhino.RhinoDoc.ActiveDoc.Layers[layerIds[i]].Name;
                 LayerHelper.BakeObjectToLayer(splitCurves[i], layerName, targetPath);
                 Rhino.RhinoApp.WriteLine("baking split curve {0} to layer {1} ", splitCurves[i].ToString(), layerName);
             }
