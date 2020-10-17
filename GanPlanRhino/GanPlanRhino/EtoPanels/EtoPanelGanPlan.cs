@@ -9,6 +9,7 @@ namespace GanPlanRhino
 {
     internal class EtoPanelGanPlan : GanPlanRhinoEtoPanel
     {
+        ICommand OpenWebPage;
         ICommand CallAPI;
         ICommand CalcRecArea;
         ICommand MakeEltjShapes;
@@ -16,6 +17,7 @@ namespace GanPlanRhino
         ICommand PlaceDoors;
         ICommand Make3DGeometry;
 
+        Button OpenWebPageButton;
         Button CallAPIButton;
         Button CalcRecAreaButton;
         Button MakeEltjShapesButton;
@@ -36,7 +38,8 @@ namespace GanPlanRhino
 
         private void InitializeComponent()
         {
-            
+            OpenWebPage = new RelayCommand<object>(obj => {  });
+
             CallAPI = new RelayCommand<object>(obj => {
                 LayerHelper.CheckLayerStructure((schemeNameBox.Text+"::Rectangles"));
                 LayerHelper.CheckLayerStructure((schemeNameBox.Text + "::EJLT Shapes"));
@@ -47,7 +50,11 @@ namespace GanPlanRhino
             PlaceDoors = new RelayCommand<object>(obj => { Doors.PlaceDoorsAt(schemeNameBox.Text); });
             Make3DGeometry = new RelayCommand<object>(obj => { message.Text = "Make3DGeometry"; });
 
-
+            OpenWebPageButton = new Button
+            {
+                Text = Rhino.UI.LOC.STR("Open Web Page"),
+                Command = OpenWebPage
+            };
             CallAPIButton = new Button
                 {
                     Text = Rhino.UI.LOC.STR("Call API"),
@@ -80,7 +87,7 @@ namespace GanPlanRhino
                 };
 
             message = new Label();
-            message.Text = "Paste in URL to start!";
+            message.Text = "Open our web tool to start!";
             message.Height = 30;
             message.TextColor = new Eto.Drawing.Color(0, 0, 1);
 
@@ -91,6 +98,7 @@ namespace GanPlanRhino
 
             area = new Label();
             area.Text = "";
+            area.Font = new Eto.Drawing.Font(Eto.Drawing.SystemFont.Bold, 11);
 
             urlInputBox = new TextBox();
             urlInputBox.Text = "paste in URL";
@@ -110,13 +118,12 @@ namespace GanPlanRhino
                     Font =  new Eto.Drawing.Font(Eto.Drawing.SystemFont.Bold, 13)
                 },
                 message,
-
+                null,
+                OpenWebPageButton,
                 null,
                 new Label { Text= "Name your Scheme: "},
                 schemeNameBox,
                 null,
-                new Label { Text="API URL:" },
-                urlInputBox,
                 CallAPIButton,
                 null,
                 area,
