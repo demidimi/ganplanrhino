@@ -37,7 +37,12 @@ namespace GanPlanRhino
         {
             
             CallAPI = new RelayCommand<object>(obj => { LayerHelper.CheckLayerStructure((schemeNameBox.Text+"::Rectangles")); });
-            CalcRecArea = new RelayCommand<object>(obj => { message.Text = "CalcRecArea"; });
+            CalcRecArea = new RelayCommand<object>(obj => {
+                area.Text = 
+                AreaCalc.UpdateArea(
+                    LayerHelper.GetCurvesFrom(
+                        schemeNameBox.Text + "::Rectangles"));
+            });
             MakeEltjShapes = new RelayCommand<object>(obj => { message.Text = "MakeEltjShapes"; });
             UpdateEltjShapeAreas = new RelayCommand<object>(obj => { message.Text = "UpdateEltjShapeAreas"; });
             PlaceDoors = new RelayCommand<object>(obj => { message.Text = "PlaceDoors"; });

@@ -271,5 +271,32 @@ namespace GanPlanRhino
             }
         }
 
+        public static List<Curve> GetCurvesFrom(string fullLayerPath)
+        {
+            List<Curve> curves = new List<Curve>();
+            RhinoDoc doc = RhinoDoc.ActiveDoc;
+
+            // Read from Rhino Layer
+            Layer layer = doc.Layers[doc.Layers.FindByFullPath(fullLayerPath, -1)];
+            Rhino.DocObjects.RhinoObject[] rhobjs = doc.Objects.FindByLayer(layer);
+            if (rhobjs == null || rhobjs.Length < 1)
+            {
+                RhinoApp.WriteLine("no object to be selected on this layer");
+                return curves;
+            }
+            foreach (Rhino.DocObjects.RhinoObject ob in rhobjs)
+            {
+                if (ob.Geometry.ObjectType == ObjectType.Curve)
+                {
+                    Curve c = (Curve)ob.Geometry;
+                    if (c.IsClosed)
+                    {
+                        curves.Add(c);
+                    }
+                }
+
+            }
+            return curves;
+        }
 }
 }
