@@ -4,6 +4,7 @@ using Rhino.Geometry;
 using Rhino.Input.Custom;
 using Rhino.Input;
 using System.Collections.Generic;
+
 namespace GanPlanRhino
 {
     internal class EtoPanelGanPlan : GanPlanRhinoEtoPanel
@@ -43,7 +44,7 @@ namespace GanPlanRhino
             CalcRecArea = new RelayCommand<object>(obj => { UpdateArea(schemeNameBox.Text + "::Rectangles", area); });
             MakeEltjShapes = new RelayCommand<object>(obj => { message.Text = "MakeEltjShapes"; });
             UpdateEltjShapeAreas = new RelayCommand<object>(obj => { UpdateArea(schemeNameBox.Text + "::EJLT Shapes", area); });
-            PlaceDoors = new RelayCommand<object>(obj => { message.Text = "PlaceDoors"; });
+            PlaceDoors = new RelayCommand<object>(obj => { Doors.PlaceDoorsAt(schemeNameBox.Text); });
             Make3DGeometry = new RelayCommand<object>(obj => { message.Text = "Make3DGeometry"; });
 
 
@@ -139,5 +140,6 @@ namespace GanPlanRhino
                         layerPath, out layerIndexs);
             area.Text = AreaCalc.UpdateArea(curves, layerIndexs);
         }
+
     }
 }
