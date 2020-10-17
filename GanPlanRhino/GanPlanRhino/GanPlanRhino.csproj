@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaCalculation.cs" />
+    <Compile Include="EtoPanels\EtoPanelGanPlan.cs" />
     <Compile Include="GanPlanRhinoPanelCommand.cs" />
     <Compile Include="GanPlanRhinoPanelViewModel.cs" />
     <Compile Include="EtoPanels\GanPlanEtoPanel.cs" />
