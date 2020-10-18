@@ -4,9 +4,10 @@ using System.Threading.Tasks;
 using Rhino;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
-using System.Net.Http;
+
 using System.Collections.Generic;
 using Rhino.Geometry;
+using System.Net.Http;
 
 namespace GanPlanRhino
 {
@@ -22,7 +23,7 @@ namespace GanPlanRhino
         {
             JObject json = new JObject();
 
-            using (HttpResponseMessage response = await client.GetAsync("http://www.ganplan.emptybox.io/api/floorplans/selected"))
+            using (HttpResponseMessage response = await client.GetAsync("https://optimus.emptybox.io/api/floorplans/selected"))
             {
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
@@ -68,6 +69,8 @@ namespace GanPlanRhino
         public void QueryMLServer(QueryTypeEnum queryType = QueryTypeEnum.real)
         {
             string myPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+
 
             switch (queryType)
             {

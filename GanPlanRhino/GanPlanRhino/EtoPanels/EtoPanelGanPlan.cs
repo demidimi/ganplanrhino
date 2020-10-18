@@ -49,7 +49,7 @@ namespace GanPlanRhino
                 FooBar myFooBar = new FooBar();
                 myFooBar.targetLayerName = schemeNameBox.Text + "::Rectangles";
 
-                myFooBar.QueryMLServer(FooBar.QueryTypeEnum.fakeOne);
+                myFooBar.QueryMLServer(FooBar.QueryTypeEnum.real);
 
 
                 //myFooBar.MakeRectanglesFromString(parentLayerName, jsonFromServer);
@@ -155,7 +155,7 @@ namespace GanPlanRhino
                 null,
                 Make3DGeometryButton,
                 null,
-                new TableRow(new NextBackButtons(ViewModel, false))
+                //new TableRow(new NextBackButtons(ViewModel, false))
                 }
             };
         }
