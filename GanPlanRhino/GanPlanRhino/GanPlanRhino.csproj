@@ -57,26 +57,17 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AreaCalc.cs" />
-    <Compile Include="AreaCalculation.cs" />
-    <Compile Include="Doors.cs" />
-    <Compile Include="FooBarMatt.cs" />
-    <Compile Include="Intersect.cs" />
-    <Compile Include="LayerHelper.cs" />
-    <Compile Include="EtoPanels\EtoPanelGanPlan.cs" />
-    <Compile Include="GanPlanRhinoPanelCommand.cs" />
-    <Compile Include="GanPlanRhinoPanelViewModel.cs" />
-    <Compile Include="EtoPanels\GanPlanEtoPanel.cs" />
-    <Compile Include="EtoPanels\EtoPanel0.cs" />
-    <Compile Include="EtoPanels\EtoPanel1.cs" />
-    <Compile Include="EtoPanels\MainPanel.cs" />
-    <Compile Include="EtoPanels\NextBackButtons.cs" />
-    <Compile Include="GanPlanRhinoCommand.cs" />
+    <Compile Include="HelpersStatic\AreaCalcs.cs" />
+    <Compile Include="LogicHandlers\Doors.cs" />
+    <Compile Include="LogicHandlers\WebCall.cs" />
+    <Compile Include="HelpersStatic\Intersections.cs" />
+    <Compile Include="HelpersStatic\Layers.cs" />
+    <Compile Include="EtoPanels\EtoPanel_GanPlan.cs" />
+    <Compile Include="RhinoCommand_GanPlan_Panel.cs" />
+    <Compile Include="EtoPanels\ViewModel_RhinoPanel_GanPlan.cs" />
+    <Compile Include="EtoPanels\EtoPanel_MainPanel.cs" />
     <Compile Include="GanPlanRhinoPlugIn.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Temp\ComputeGHhelper.cs" />
-    <Compile Include="Temp\RhinoComputeGH.cs" />
-    <Compile Include="Temp\Test1.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="EmbeddedResources\plugin-utility.ico" />
