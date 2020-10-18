@@ -1,4 +1,5 @@
 ﻿using Eto.Forms;
+using Eto.Drawing;
 using System.Windows.Input;
 using Rhino.Geometry;
 using Rhino.Input.Custom;
@@ -8,7 +9,9 @@ using Newtonsoft.Json.Linq;
 
 namespace GanPlanRhino
 {
-    internal class EtoPanelGanPlan : GanPlanRhinoEtoPanel
+
+
+    internal class EtoPanelGanPlan : Panel
     {
         ICommand OpenWebPage;
         ICommand CallAPI;
@@ -31,7 +34,7 @@ namespace GanPlanRhino
         TextBox urlInputBox;
         TextBox schemeNameBox;
         public Label area;
-        public EtoPanelGanPlan(GanPlanRhinoPanelViewModel dataContext) : base(dataContext)
+        public EtoPanelGanPlan(GanPlanRhinoPanelViewModel dataContext)
         {
             DataContext = dataContext;
             InitializeComponent();
@@ -39,74 +42,83 @@ namespace GanPlanRhino
 
         private void InitializeComponent()
         {
+            #region COMMAND SETUP
             OpenWebPage = new RelayCommand<object>(obj => {
-                System.Diagnostics.Process.Start("https://optimus.emptybox.io/");
+                System.Diagnostics.Process.Start("https://ganplan.emptybox.io/");
                 message.Text = "After Selecting a Scheme on the web, bring it into Rhino with an API call. ";
             });
 
             CallAPI = new RelayCommand<object>(obj => {
-
-                FooBar myFooBar = new FooBar();
-                myFooBar.targetLayerName = schemeNameBox.Text + "::Rectangles";
-
-                myFooBar.QueryMLServer(FooBar.QueryTypeEnum.real);
-
-
-                //myFooBar.MakeRectanglesFromString(parentLayerName, jsonFromServer);
+                WebCallManager myFooBar = new WebCallManager();
+                myFooBar.QueryMLServer(schemeNameBox.Text + "::Rectangles");
 
                 LayerHelper.CheckLayerStructure((schemeNameBox.Text+"::Rectangles"));
                 LayerHelper.CheckLayerStructure((schemeNameBox.Text + "::EJLT Shapes"));
 
-
-
-
                 message.Text = "Adjust the rectangles to match your desired area. ";
             });
+
             CalcRecArea = new RelayCommand<object>(obj => { 
                 UpdateArea(schemeNameBox.Text + "::Rectangles", area);
                 message.Text = "Cut out specific shapes of your rooms. ";
             });
-            MakeEltjShapes = new RelayCommand<object>(obj => { IntersectNow(schemeNameBox.Text + "::Rectangles",schemeNameBox.Text + "::EJLT Shapes"); });
-            UpdateEltjShapeAreas = new RelayCommand<object>(obj => { UpdateArea(schemeNameBox.Text + "::EJLT Shapes", area); });
-            PlaceDoors = new RelayCommand<object>(obj => { Doors.PlaceDoorsAt(schemeNameBox.Text); });
-            Make3DGeometry = new RelayCommand<object>(obj => { message.Text = "Make3DGeometry"; });
 
+            MakeEltjShapes = new RelayCommand<object>(obj => { IntersectNow(schemeNameBox.Text + "::Rectangles",schemeNameBox.Text + "::EJLT Shapes"); });
+            
+            UpdateEltjShapeAreas = new RelayCommand<object>(obj => { UpdateArea(schemeNameBox.Text + "::EJLT Shapes", area); });
+            
+            PlaceDoors = new RelayCommand<object>(obj => { Doors.PlaceDoorsAt(schemeNameBox.Text); });
+            
+            Make3DGeometry = new RelayCommand<object>(obj => { message.Text = "Make3DGeometry"; });
+            #endregion
+
+
+            #region Button Setup
             OpenWebPageButton = new Button
             {
                 Text = Rhino.UI.LOC.STR("Open Web Page"),
                 Command = OpenWebPage
             };
+
             CallAPIButton = new Button
-                {
-                    Text = Rhino.UI.LOC.STR("Call API for selected Scheme"),
-                    Command = CallAPI
-                };
+            {
+                Text = Rhino.UI.LOC.STR("Call API for selected Scheme"),
+                Command = CallAPI
+            };
+
             CalcRecAreaButton = new Button
             {
                 Text = Rhino.UI.LOC.STR("Calc Rectangle Area"),
                 Command = CalcRecArea
             };
+
             MakeEltjShapesButton = new Button
             {
                 Text = Rhino.UI.LOC.STR("Cut Shapes"),
                 Command = MakeEltjShapes
             };
+
             UpdateEltjShapeAreasButton = new Button
-                {
-                    Text = Rhino.UI.LOC.STR("Calc Shape Area"),
-                    Command = UpdateEltjShapeAreas
-                };
+            {
+                Text = Rhino.UI.LOC.STR("Calc Shape Area"),
+                Command = UpdateEltjShapeAreas
+            };
+
             PlaceDoorsButton = new Button
             {
                 Text = Rhino.UI.LOC.STR("Place Some Doors"),
                 Command = PlaceDoors
             };
+
             Make3DGeometryButton = new Button
             {
                 Text = Rhino.UI.LOC.STR("See it in 3D"),
                 Command = Make3DGeometry
             };
+            #endregion
 
+
+            #region 
             message = new Label();
             message.Text = "Open our web tool to start!";
             message.Height = 30;
@@ -126,36 +138,40 @@ namespace GanPlanRhino
 
             schemeNameBox = new TextBox();
             schemeNameBox.Text = "Scheme1";
+            #endregion
+
+
+
 
             Content = new TableLayout
             {
+
                 Padding = 0,
-                Spacing = SpacingSize,
+                Spacing = new Size(4, 4),
                 Rows =
                 {
-                new Label
-                {
-                    Text="GanPlan",
-                    Font =  new Eto.Drawing.Font(Eto.Drawing.SystemFont.Bold, 13)
-                },
-                message,
-                null,
-                OpenWebPageButton,
-                null,
-                new Label { Text= "Name your Scheme: "},
-                schemeNameBox,
-                CallAPIButton,
-                null,
-                area,
-                CalcRecAreaButton,
-                MakeEltjShapesButton,
-                UpdateEltjShapeAreasButton,
-                null,
-                PlaceDoorsButton,
-                null,
-                Make3DGeometryButton,
-                null,
-                //new TableRow(new NextBackButtons(ViewModel, false))
+                    new Label
+                    {
+                        Text="GanPlan",
+                        Font =  new Eto.Drawing.Font(Eto.Drawing.SystemFont.Bold, 13)
+                    },
+                    message,
+                    null,
+                    OpenWebPageButton,
+                    null,
+                    new Label { Text= "Name your Scheme: "},
+                    schemeNameBox,
+                    CallAPIButton,
+                    null,
+                    area,
+                    CalcRecAreaButton,
+                    MakeEltjShapesButton,
+                    UpdateEltjShapeAreasButton,
+                    null,
+                    PlaceDoorsButton,
+                    null,
+                    Make3DGeometryButton,
+                    null,
                 }
             };
         }
@@ -170,16 +186,18 @@ namespace GanPlanRhino
 
             if (layerPath.EndsWith("Rectangles"))
             {
+                AreaCalc.AddTextLabel(curves, layerIndexs);
+
                 //split curves
                 curves = Intersect.IntersectCurves(curves, layerIndexs, out layerIds);
                 area.Text = AreaCalc.UpdateArea(curves, layerIds);
-
             }
             else
             {
                 area.Text = AreaCalc.UpdateArea(curves, layerIndexs);
             }
         }
+
         public static void IntersectNow(string layerPath, string targetPath)
         {
             //initialize variables
@@ -201,9 +219,6 @@ namespace GanPlanRhino
                 Rhino.RhinoApp.WriteLine("baking split curve {0} to layer {1} ", splitCurves[i].ToString(), layerName);
             }
             Rhino.RhinoDoc.ActiveDoc.Views.Redraw();
-
-
-
         }
     }
 }

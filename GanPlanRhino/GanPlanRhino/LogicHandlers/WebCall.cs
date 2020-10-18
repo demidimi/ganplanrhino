@@ -11,46 +11,48 @@ using System.Net.Http;
 
 namespace GanPlanRhino
 {
-    public class FooBar
+    public class WebCallManager
     {
-        // HttpClient is intended to be instantiated once per application, rather than per-use. See Remarks.
         private static readonly HttpClient client = new HttpClient();
-        //private JObject latestResponse = new JObject();
         private string latestResponse = "";
         public string targetLayerName = "";
 
-        public async Task<string> MakeAsyncRequest()
+        public void QueryMLServer(string parentLayerName)
         {
-            JObject json = new JObject();
+            //call the real code
+            targetLayerName = parentLayerName;
+            MakeAsyncRequest();
+        }
 
-            using (HttpResponseMessage response = await client.GetAsync("https://optimus.emptybox.io/api/floorplans/selected"))
+        public async Task MakeAsyncRequest()
+        {
+            using (HttpResponseMessage response = await client.GetAsync("https://ganplan.emptybox.io/api/floorplans/selected"))
             {
                 response.EnsureSuccessStatusCode();
                 string responseBody = await response.Content.ReadAsStringAsync();
 
-                //json = JObject.Parse(responseBody);
                 lock (this.latestResponse)
                 {
-                    //latestResponse = json;
+                    //Check server is giving an acceptable response code
+                    //if so, update
                     latestResponse = responseBody;
+
+                    //if not...?
                 }
                 GotWebResponse();
             }
-
-            return latestResponse;
-            //MessageBox.Show("Finish");
         }
-
  
         private void GotWebResponse()
         {
+            //Register an event listener so Rhino knows we're waiting to do stuff
             RhinoApp.Idle += OnRhinoIdle;
         }
 
         private void OnRhinoIdle(object sender, EventArgs e)
         {
+            //When Rhino is ready, unregister the event listener, then go ahead and draw the rectangles
             RhinoApp.Idle -= OnRhinoIdle;
-            // Handle web response here...
             lock (latestResponse)
             {
                 //Draw rectangles, assign colors and layers, etc
@@ -58,45 +60,6 @@ namespace GanPlanRhino
             }
         }
     
-        public enum QueryTypeEnum
-        {
-            real,
-            noResults,
-            fakeOne,
-            fakeTwo
-        }
-
-        public void QueryMLServer(QueryTypeEnum queryType = QueryTypeEnum.real)
-        {
-            string myPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-
-
-            switch (queryType)
-            {
-                case QueryTypeEnum.noResults:
-                    //JObject NoResultsObject = JObject.Parse("{\"data\": {}, \"status\": \"OK\"}");
-                    latestResponse = "{\"data\": {}, \"status\": \"OK\"}";
-                    GotWebResponse(); //fake but thats ok
-                    break;
-                case QueryTypeEnum.fakeOne:
-                    //JObject FakeResultOne = JObject.Parse();
-                    latestResponse = System.IO.File.ReadAllText(myPath + "/FakeResultOne.txt");
-                    GotWebResponse(); //fake but thats ok
-                    break;
-                case QueryTypeEnum.fakeTwo:
-                    //JObject FakeResultTwo = JObject.Parse(System.IO.File.ReadAllText(myPath + "/FakeResultTwo.txt"));
-                    latestResponse = System.IO.File.ReadAllText(myPath + "/FakeResultTwo.txt");
-                    GotWebResponse(); //fake but thats ok
-                    break;
-                case QueryTypeEnum.real:
-                default:
-                    //call the real code
-                    MakeAsyncRequest();//includes a call to GotWebResponse after the service responds
-                    break;
-            }
-        }
-
         public void MakeRectanglesFromString(string parentLayerName, string input)
         {
             Response myResponseAsObjects = Newtonsoft.Json.JsonConvert.DeserializeObject<Response>(input);
@@ -114,8 +77,8 @@ namespace GanPlanRhino
             foreach (Room myRoom in myResponseAsObjects.data.rooms)
             {
                 Rhino.Geometry.Plane basePlane = Rhino.Geometry.Plane.WorldXY;
-                Rhino.Geometry.Point3d cornerA = new Rhino.Geometry.Point3d(myRoom.rectangle[0][0], myRoom.rectangle[0][1], 0);
-                Rhino.Geometry.Point3d cornerB = new Rhino.Geometry.Point3d(myRoom.rectangle[1][0], myRoom.rectangle[1][1], 0);
+                Rhino.Geometry.Point3d cornerA = new Rhino.Geometry.Point3d(myRoom.rectangle[0][0], -myRoom.rectangle[0][1], 0);
+                Rhino.Geometry.Point3d cornerB = new Rhino.Geometry.Point3d(myRoom.rectangle[1][0], -myRoom.rectangle[1][1], 0);
                 Rectangle3d oneRectangle = new Rhino.Geometry.Rectangle3d(basePlane, cornerA, cornerB);
                 LayerHelper.BakeObjectToLayer(oneRectangle.ToPolyline().ToPolylineCurve(), i + "_" + myRoom.room, parentLayerName);
                 i++;
@@ -124,6 +87,7 @@ namespace GanPlanRhino
             Rhino.RhinoDoc.ActiveDoc.Views.Redraw();
         }
 
+        //Classes that are auto-populated by Json serialization
         public class Room
         {
             public List<List<double>> rectangle { get; set; }
