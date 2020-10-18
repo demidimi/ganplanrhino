@@ -67,11 +67,11 @@ namespace GanPlanRhino
             //if data is empty, return with nothing.. Add a note?
 
             Response myResponseAsObjects = Newtonsoft.Json.JsonConvert.DeserializeObject<Response>(input);
-            List<Room> roomsSortedLargeToSmall = myResponseAsObjects.data.rooms.OrderByDescending(x => x.rectangleArea).ToList();
-            
+            List<Room> roomsSortedLargeToSmall = myResponseAsObjects.data.rooms.OrderBy(x => x.rectangleArea).ToList();
+
 
             //int drawHeightTest = 0;
-
+            int i = 0;
             foreach (Room myRoom in roomsSortedLargeToSmall)
             {
                 Plane basePlane = Plane.WorldXY;
@@ -80,10 +80,11 @@ namespace GanPlanRhino
 
                 Rectangle3d oneRectangle = new Rectangle3d(basePlane, myRoom.cornerA, myRoom.cornerB);
                 
-                LayerHelper.BakeObjectToLayer(oneRectangle.ToPolyline().ToPolylineCurve(), myRoom.room, parentLayerName);
+                LayerHelper.BakeObjectToLayer(oneRectangle.ToPolyline().ToPolylineCurve(), i + myRoom.room, parentLayerName);
                 
                 Color layerColor = System.Drawing.ColorTranslator.FromHtml(myRoom.roomColor);
-                LayerHelper.ConfirmLayerColor(layerColor, myRoom.room, parentLayerName);
+                LayerHelper.ConfirmLayerColor(layerColor, i + myRoom.room, parentLayerName);
+                i++;
             }
 
             RhinoDoc.ActiveDoc.Views.Redraw();
