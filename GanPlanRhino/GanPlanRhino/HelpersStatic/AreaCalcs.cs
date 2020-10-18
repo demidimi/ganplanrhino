@@ -13,10 +13,13 @@ namespace GanPlanRhino
     {
         public static double[] AreaOf(List<Curve> curves)
         {
+            UnitSystem currentDocUnits = RhinoDoc.ActiveDoc.ModelUnitSystem;
+            double unitSystemScaler = RhinoMath.UnitScale(currentDocUnits, UnitSystem.Feet);
+
             double[] areas = new double[curves.Count()];
             for (int i = 0; i < curves.Count(); i++)
             {
-                areas[i] = Math.Round(AreaMassProperties.Compute(curves[i]).Area, 2);
+                areas[i] = Math.Round(AreaMassProperties.Compute(curves[i]).Area*unitSystemScaler* unitSystemScaler, 2);
             }
             return areas;
         }
