@@ -6,12 +6,98 @@ using System.Threading.Tasks;
 using Rhino.Input.Custom;
 using Rhino.Input;
 using Rhino.Geometry;
+using Rhino.Geometry.Intersect;
 
 namespace GanPlanRhino
 {
     public static class Doors
     {
+        public static void Make3d(string schemeName)
+        {
+            string inputLayerPath = schemeName + "::EJLT Shapes";
+            string outputLayerPath = schemeName + "::Walls";
+            string doorsLayerPath = schemeName + "::Doors";
 
+            List<int> layerIndexs;
+            List<Curve> curves = LayerHelper.GetCurvesFromChild(inputLayerPath, out layerIndexs);
+            List<Curve> doors = LayerHelper.GetCurvesFrom(doorsLayerPath);
+            List<LineCurve> afterCut = new List<LineCurve>();
+
+            List<Line> exploded = new List<Line>();
+            foreach (Curve c in curves)
+            {
+                Polyline poly;
+                c.TryGetPolyline(out poly);
+
+                exploded.AddRange(poly.GetSegments());
+            }
+
+            List<Line> lineSegDoor = new List<Line>();
+            List<List<LineCurve>> doorsPerSeg = new List<List<LineCurve>>();
+            foreach (Line lineSeg in exploded)
+            {
+                List<LineCurve> doorsThisSeg = new List<LineCurve>();
+                foreach(Curve door in doors)
+                {
+                    CurveIntersections inter = Intersection.CurveLine(door, lineSeg, Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance, 0.0);
+                    if (inter.Count == 2)
+                    {
+                        LineCurve l1;
+
+                        Point3d p1 = inter.First().PointA;
+                        Point3d p2 = inter[1].PointA;
+                        l1 = new LineCurve(p1, p2);
+                        doorsThisSeg.Add(l1);
+                    }
+                }
+                if (doorsThisSeg.Count > 0)
+                {
+                    lineSegDoor.Add(lineSeg);
+                    doorsPerSeg.Add(doorsThisSeg);
+                } else
+                {
+                    // no intersection, add to after cut
+                    afterCut.Add(new LineCurve(lineSeg));
+                }
+            }
+
+            for (int i = 0; i < lineSegDoor.Count; i++)
+            {
+                // points from all intersection points
+                List<Point3d> intersectionPts = new List<Point3d>();
+                intersectionPts.Add(lineSegDoor[i].From);
+                intersectionPts.Add(lineSegDoor[i].To);
+                foreach(LineCurve doorLine in doorsPerSeg[i])
+                {
+                    intersectionPts.Add(doorLine.PointAtStart);
+                    intersectionPts.Add(doorLine.PointAtEnd);
+                }
+                List<Point3d> sortedPoints = intersectionPts.OrderBy(pnt => pnt.Y).ThenBy(pnt => pnt.X).ToList();
+
+                // construct line segments
+                for (int pi = 0; pi < sortedPoints.Count ; pi=pi+2)
+                {
+                    LineCurve cuttedSegment = new LineCurve(sortedPoints[pi], sortedPoints[pi+1]);
+                    bool indoor = false;
+                    foreach (Curve door in doors)
+                    {
+                        if (door.Contains(cuttedSegment.PointAt(0.5), Plane.WorldXY, Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance)==PointContainment.Inside){
+                            indoor = true;
+                            break;
+                        }
+                    }
+                    if (!indoor) afterCut.Add(cuttedSegment);
+
+                }
+            }
+
+            foreach (LineCurve wallLine in afterCut)
+            {
+                LayerHelper.BakeObjectToLayer(Extrusion.Create(wallLine, 20, false).ToBrep(), "Walls", schemeName);
+
+            }
+
+        }
         public static void PlaceDoorsAt(string schemeName)
         {
             string inputLayerPath = schemeName + "::EJLT Shapes";
@@ -22,7 +108,7 @@ namespace GanPlanRhino
 
             // get curves
             List<int> layerIndexs;
-            List<Curve> curves = LayerHelper.GetCurvesFrom(inputLayerPath, out layerIndexs);
+            List<Curve> curves = LayerHelper.GetCurvesFromChild(inputLayerPath, out layerIndexs);
 
             // explode curves
             List<Polyline> polies = new List<Polyline>();
@@ -51,7 +137,7 @@ namespace GanPlanRhino
                             Curve c1 = line.ToNurbsCurve();
                             Curve c2 = otherline.ToNurbsCurve();
                             // get all intersections
-                            var intersects = Rhino.Geometry.Intersect.Intersection.CurveCurve(c1, c2, Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance, 0.1);
+                            var intersects = Intersection.CurveCurve(c1, c2, Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance, 0.1);
                             if (intersects != null && intersects.Count > 0)
                             {
                                 foreach (var inter in intersects)
