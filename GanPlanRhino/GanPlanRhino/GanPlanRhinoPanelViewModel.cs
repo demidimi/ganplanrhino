@@ -14,10 +14,11 @@ namespace GanPlanRhino
         public GanPlanRhinoPanelViewModel(uint documentRuntimeSerialNumber)
         {
             // Button commands
-            NextCommand = new RelayCommand<object>(obj => { NextButtonCommand(); });
-            BackCommand = new RelayCommand<object>(obj => { BackButtonCommand(); });
-            FinishCommand = new RelayCommand<object>(obj => { FinishButtonCommand(); });
-            
+            // TURNED OFF AS TEST 
+            //NextCommand = new RelayCommand<object>(obj => { NextButtonCommand(); });
+            //BackCommand = new RelayCommand<object>(obj => { BackButtonCommand(); });
+            //FinishCommand = new RelayCommand<object>(obj => { FinishButtonCommand(); });
+
 
             // Read-only property initialization
             DocumentRuntimeSerialNumber = documentRuntimeSerialNumber;
@@ -25,9 +26,11 @@ namespace GanPlanRhino
             // List of wizard panels in the order displayed
             m_panels = new GanPlanRhinoEtoPanel[]
             {
-                new EtoPanel0(this),
+                // TURNED OFF AS TEST 
+                //new EtoPanel0(this),
                 new EtoPanelGanPlan(this),
-                new EtoPanel1(this)
+                // TURNED OFF AS TEST 
+                //new EtoPanel1(this)
             };
 
             // First panel

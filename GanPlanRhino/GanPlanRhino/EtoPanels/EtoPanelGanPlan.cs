@@ -4,6 +4,7 @@ using Rhino.Geometry;
 using Rhino.Input.Custom;
 using Rhino.Input;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace GanPlanRhino
 {
@@ -44,8 +45,21 @@ namespace GanPlanRhino
             });
 
             CallAPI = new RelayCommand<object>(obj => {
+
+                FooBar myFooBar = new FooBar();
+                myFooBar.targetLayerName = schemeNameBox.Text + "::Rectangles";
+
+                myFooBar.QueryMLServer(FooBar.QueryTypeEnum.real);
+
+
+                //myFooBar.MakeRectanglesFromString(parentLayerName, jsonFromServer);
+
                 LayerHelper.CheckLayerStructure((schemeNameBox.Text+"::Rectangles"));
                 LayerHelper.CheckLayerStructure((schemeNameBox.Text + "::EJLT Shapes"));
+
+
+
+
                 message.Text = "Adjust the rectangles to match your desired area. ";
             });
             CalcRecArea = new RelayCommand<object>(obj => { 
@@ -141,7 +155,7 @@ namespace GanPlanRhino
                 null,
                 Make3DGeometryButton,
                 null,
-                new TableRow(new NextBackButtons(ViewModel, false))
+                //new TableRow(new NextBackButtons(ViewModel, false))
                 }
             };
         }
