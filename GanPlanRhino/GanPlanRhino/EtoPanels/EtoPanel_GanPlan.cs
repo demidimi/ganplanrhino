@@ -70,7 +70,7 @@ namespace GanPlanRhino
             
             PlaceDoors = new RelayCommand<object>(obj => { Doors.PlaceDoorsAt(schemeNameBox.Text); });
             
-            Make3DGeometry = new RelayCommand<object>(obj => { message.Text = "Make3DGeometry"; });
+            Make3DGeometry = new RelayCommand<object>(obj => { Doors.Make3d(schemeNameBox.Text);  });
             #endregion
 
 
@@ -180,10 +180,23 @@ namespace GanPlanRhino
         private static void UpdateArea(string layerPath, Label area)
         {
             List<int> layerIndexs;
-            // TODO: first intersect them! 
-            List<Curve> curves = LayerHelper.GetCurvesFrom(
+            List<Curve> curves = LayerHelper.GetCurvesFromChild(
                         layerPath, out layerIndexs);
-            area.Text = AreaCalc.UpdateArea(curves, layerIndexs);
+            List<int> layerIds;
+
+
+            if (layerPath.EndsWith("Rectangles"))
+            {
+                AreaCalc.AddTextLabel(curves, layerIndexs);
+
+                //split curves
+                curves = Intersect.IntersectCurves(curves, layerIndexs, out layerIds);
+                area.Text = AreaCalc.UpdateArea(curves, layerIds);
+            }
+            else
+            {
+                area.Text = AreaCalc.UpdateArea(curves, layerIndexs);
+            }
         }
 
         public static void IntersectNow(string layerPath, string targetPath)
@@ -198,7 +211,7 @@ namespace GanPlanRhino
 
 
             //get curves from the specific layer - rectangles
-            c = LayerHelper.GetCurvesFrom(layerPath, out layerIndexs);
+            c = LayerHelper.GetCurvesFromChild(layerPath, out layerIndexs);
 
             //split curves and bake to target layer
             splitCurves = Intersect.IntersectCurves(c, layerIndexs, out layerIds);
