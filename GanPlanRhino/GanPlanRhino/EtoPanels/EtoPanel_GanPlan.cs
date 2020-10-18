@@ -6,6 +6,7 @@ using Rhino.Input.Custom;
 using Rhino.Input;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using Rhino.DocObjects;
 
 namespace GanPlanRhino
 {
@@ -206,6 +207,8 @@ namespace GanPlanRhino
             List<Curve> splitCurves;
             List<int> layerIds;
             string layerName;
+            var layerTable = Rhino.RhinoDoc.ActiveDoc.Layers;
+
 
             //get curves from the specific layer - rectangles
             c = LayerHelper.GetCurvesFromChild(layerPath, out layerIndexs);
@@ -216,8 +219,13 @@ namespace GanPlanRhino
             {
                 layerName = Rhino.RhinoDoc.ActiveDoc.Layers[layerIds[i]].Name;
                 LayerHelper.BakeObjectToLayer(splitCurves[i], layerName, targetPath);
+
+                // change color of layer
+                System.Drawing.Color layerColor = layerTable.FindIndex(layerTable.FindByFullPath(layerPath + "::" + layerName, -1)).Color;
+                LayerHelper.ConfirmLayerColor(layerColor, layerName, targetPath);
                 Rhino.RhinoApp.WriteLine("baking split curve {0} to layer {1} ", splitCurves[i].ToString(), layerName);
             }
+
             Rhino.RhinoDoc.ActiveDoc.Views.Redraw();
         }
     }

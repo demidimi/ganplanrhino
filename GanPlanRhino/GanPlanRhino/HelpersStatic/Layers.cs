@@ -342,5 +342,36 @@ namespace GanPlanRhino
             return curves;
         }
 
+        public static void ConfirmLayerColor(Color color, string layerName, string layerParentName)
+        {
+            EnsureLayer(layerName, layerParentName);
+
+            RhinoDoc doc = RhinoDoc.ActiveDoc;
+
+            //Get a fresh copy of the LayerTable
+            Rhino.DocObjects.Tables.LayerTable layerTable = doc.Layers;
+            //Build a search string to see if the layer exists already
+            string layerNameSearchString = "";
+            if (layerParentName != null && layerParentName != "")
+            {
+                layerNameSearchString += layerParentName + "::";
+            }
+            layerNameSearchString += layerName;
+
+            RhinoApp.WriteLine("Changing color of '" + layerNameSearchString + ".");
+
+
+            //Run the actual check to see if the Layer exists
+            RhinoApp.WriteLine("Checking '" + layerNameSearchString + "' to see if it exists.");
+            int layerIndex = layerTable.FindByFullPath(layerNameSearchString, -1);
+
+            if(layerIndex >= 0)
+            {
+                Layer layerToChange = layerTable.FindIndex(layerIndex);
+                layerToChange.Color = color;
+            }
+
+
+        }
     }
 }

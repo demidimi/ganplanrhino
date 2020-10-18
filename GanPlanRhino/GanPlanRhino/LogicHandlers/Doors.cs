@@ -7,6 +7,7 @@ using Rhino.Input.Custom;
 using Rhino.Input;
 using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
+using Rhino;
 
 namespace GanPlanRhino
 {
@@ -90,10 +91,11 @@ namespace GanPlanRhino
 
                 }
             }
-
+            UnitSystem currentDocUnits = RhinoDoc.ActiveDoc.ModelUnitSystem;
+            double unitSystemScaler = RhinoMath.UnitScale(UnitSystem.Feet, currentDocUnits);
             foreach (LineCurve wallLine in afterCut)
             {
-                LayerHelper.BakeObjectToLayer(Extrusion.Create(wallLine, 20, false).ToBrep(), "Walls", schemeName);
+                LayerHelper.BakeObjectToLayer(Extrusion.Create(wallLine, 8 * unitSystemScaler, false).ToBrep(), "Walls", schemeName);
 
             }
             Rhino.RhinoDoc.ActiveDoc.Views.Redraw();
@@ -104,8 +106,12 @@ namespace GanPlanRhino
             string inputLayerPath = schemeName + "::EJLT Shapes";
             string outputLayerPath = schemeName + "::Doors";
 
-            double doorW = 3;
-            double doorH = 0.5;
+
+            UnitSystem currentDocUnits = RhinoDoc.ActiveDoc.ModelUnitSystem;
+            double unitSystemScaler = RhinoMath.UnitScale(UnitSystem.Feet, currentDocUnits);
+
+            double doorW = 2.5 * unitSystemScaler;
+            double doorH = 0.2 * unitSystemScaler;
 
             // get curves
             List<int> layerIndexs;
@@ -147,7 +153,7 @@ namespace GanPlanRhino
                                     {
                                         double length = inter.OverlapA.Length * c1.GetLength();
 
-                                        if (length > 4) // overlap is long enough
+                                        if (length > 3.5 * unitSystemScaler) // overlap is long enough
                                         {
                                             Point3d mid = c1.PointAt(inter.OverlapA.Mid);
 
