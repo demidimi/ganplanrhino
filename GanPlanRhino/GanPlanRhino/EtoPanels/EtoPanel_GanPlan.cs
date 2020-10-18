@@ -186,10 +186,11 @@ namespace GanPlanRhino
 
             if (layerPath.EndsWith("Rectangles"))
             {
+                AreaCalc.AddTextLabel(curves, layerIndexs);
+
                 //split curves
                 curves = Intersect.IntersectCurves(curves, layerIndexs, out layerIds);
                 area.Text = AreaCalc.UpdateArea(curves, layerIds);
-
             }
             else
             {
