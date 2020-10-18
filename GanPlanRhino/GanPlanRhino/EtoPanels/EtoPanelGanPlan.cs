@@ -163,10 +163,22 @@ namespace GanPlanRhino
         private static void UpdateArea(string layerPath, Label area)
         {
             List<int> layerIndexs;
-            // TODO: first intersect them! 
             List<Curve> curves = LayerHelper.GetCurvesFrom(
                         layerPath, out layerIndexs);
-            area.Text = AreaCalc.UpdateArea(curves, layerIndexs);
+            List<int> layerIds;
+
+
+            if (layerPath.EndsWith("Rectangles"))
+            {
+                //split curves
+                curves = Intersect.IntersectCurves(curves, layerIndexs, out layerIds);
+                area.Text = AreaCalc.UpdateArea(curves, layerIds);
+
+            }
+            else
+            {
+                area.Text = AreaCalc.UpdateArea(curves, layerIndexs);
+            }
         }
         public static void IntersectNow(string layerPath, string targetPath)
         {
