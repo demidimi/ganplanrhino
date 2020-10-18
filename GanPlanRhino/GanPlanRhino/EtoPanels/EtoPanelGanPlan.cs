@@ -52,7 +52,7 @@ namespace GanPlanRhino
                 UpdateArea(schemeNameBox.Text + "::Rectangles", area);
                 message.Text = "Cut out specific shapes of your rooms. ";
             });
-            MakeEltjShapes = new RelayCommand<object>(obj => { message.Text = "MakeEltjShapes"; });
+            MakeEltjShapes = new RelayCommand<object>(obj => { IntersectNow(schemeNameBox.Text + "::Rectangles",schemeNameBox.Text + "::EJLT Shapes"); });
             UpdateEltjShapeAreas = new RelayCommand<object>(obj => { UpdateArea(schemeNameBox.Text + "::EJLT Shapes", area); });
             PlaceDoors = new RelayCommand<object>(obj => { Doors.PlaceDoorsAt(schemeNameBox.Text); });
             Make3DGeometry = new RelayCommand<object>(obj => { message.Text = "Make3DGeometry"; });
