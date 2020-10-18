@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Rhino;
 using Newtonsoft.Json.Linq;
 using System.Reflection;
+using System.Linq;
 
 using System.Collections.Generic;
 using Rhino.Geometry;
@@ -62,14 +63,21 @@ namespace GanPlanRhino
     
         public void MakeRectanglesFromString(string parentLayerName, string input)
         {
-            Response myResponseAsObjects = Newtonsoft.Json.JsonConvert.DeserializeObject<Response>(input);
+            //if data is empty, return with nothing.. Add a note?
 
-            foreach (Room myRoom in myResponseAsObjects.data.rooms)
+            Response myResponseAsObjects = Newtonsoft.Json.JsonConvert.DeserializeObject<Response>(input);
+            List<Room> roomsSortedLargeToSmall = myResponseAsObjects.data.rooms.OrderByDescending(x => x.rectangleArea).ToList();
+            
+
+            //int drawHeightTest = 0;
+
+            foreach (Room myRoom in roomsSortedLargeToSmall)
             {
-                Rhino.Geometry.Plane basePlane = Rhino.Geometry.Plane.WorldXY;
-                Rhino.Geometry.Point3d cornerA = new Rhino.Geometry.Point3d(myRoom.rectangle[0][0], -myRoom.rectangle[0][1], 0);
-                Rhino.Geometry.Point3d cornerB = new Rhino.Geometry.Point3d(myRoom.rectangle[1][0], -myRoom.rectangle[1][1], 0);
-                Rectangle3d oneRectangle = new Rhino.Geometry.Rectangle3d(basePlane, cornerA, cornerB);
+                Plane basePlane = Plane.WorldXY;
+                //Plane tempBasePlane = new Plane(new Point3d(0, 0, drawHeightTest), new Vector3d(0, 0, 1));
+                //drawHeightTest += 24;
+
+                Rectangle3d oneRectangle = new Rhino.Geometry.Rectangle3d(basePlane, myRoom.cornerA, myRoom.cornerB);
                 LayerHelper.BakeObjectToLayer(oneRectangle.ToPolyline().ToPolylineCurve(), myRoom.room, parentLayerName);
             }
 
@@ -80,6 +88,44 @@ namespace GanPlanRhino
         public class Room
         {
             public List<List<double>> rectangle { get; set; }
+
+            public double ScaleToFitDocument(double input)
+            {
+                //The input is coming in from 0-300
+                //This correlates with roughly 20 feet
+                double scaledToFeet = input / 10;
+
+                UnitSystem currentDocUnits = Rhino.RhinoDoc.ActiveDoc.ModelUnitSystem;
+                double unitSystemScaler = RhinoMath.UnitScale(UnitSystem.Feet, currentDocUnits);
+
+                return scaledToFeet * unitSystemScaler;
+            }
+
+            public Point3d cornerA
+            {
+                get
+                {
+                    return new Point3d(ScaleToFitDocument(this.rectangle[0][0]), ScaleToFitDocument (- this.rectangle[0][1]), 0);
+                }
+            }
+
+            public Point3d cornerB
+            {
+                get
+                {
+                    return new Point3d(ScaleToFitDocument(this.rectangle[1][0]), ScaleToFitDocument (- this.rectangle[1][1]), 0);
+                }
+            }
+
+            public double rectangleArea {
+                get {
+                    double width = this.rectangle[1][0] - this.rectangle[0][0];
+                    double height = this.rectangle[1][1] - this.rectangle[0][1];
+                    double area = width * height;
+                    return area;
+                }
+                
+            }
             public string room { get; set; }
             public string roomColor { get; set; }
         }
@@ -87,7 +133,7 @@ namespace GanPlanRhino
         public class Data
         {
             public int iteration { get; set; }
-            public IList<Room> rooms { get; set; }
+            public List<Room> rooms { get; set; }
         }
 
         public class Response
