@@ -56,14 +56,16 @@ namespace GanPlanRhino
         }
         public static Point3d AddTextLabel (Curve curve, string text, List<Point3d> oldPts)
         {
+            UnitSystem currentDocUnits = RhinoDoc.ActiveDoc.ModelUnitSystem;
+            double unitSystemScaler = RhinoMath.UnitScale(UnitSystem.Feet, currentDocUnits);
             double param;
-            curve.ClosestPoint(new Point3d(-1000, -1000, 0), out param);
+            curve.ClosestPoint(new Point3d(-1000 * unitSystemScaler, -1000 * unitSystemScaler, 0), out param);
             Point3d pt = curve.PointAt(param);
             foreach (Point3d point in oldPts)
             {
-                if (pt.Y == point.Y && Math.Abs(pt.X - point.X) <25)
+                if (pt.Y == point.Y && Math.Abs(pt.X - point.X) <10 * unitSystemScaler)
                 {
-                    pt = pt + new Point3d(0, 5, 0);
+                    pt = pt + new Point3d(0, 2 * unitSystemScaler, 0);
                 }
             }
             AddTextLabel(pt, text);
@@ -72,8 +74,10 @@ namespace GanPlanRhino
 
         public static void AddTextLabel (Point3d pt, string text)
         {
+            UnitSystem currentDocUnits = RhinoDoc.ActiveDoc.ModelUnitSystem;
+            double unitSystemScaler = RhinoMath.UnitScale(UnitSystem.Feet, currentDocUnits);
             var doc = RhinoDoc.ActiveDoc;
-            const double height = 5.0;
+            double height = (0.35 * unitSystemScaler);
             const string font = "Arial";
             Rhino.Geometry.Plane plane = doc.Views.ActiveView.ActiveViewport.ConstructionPlane();
             plane.Origin = pt;

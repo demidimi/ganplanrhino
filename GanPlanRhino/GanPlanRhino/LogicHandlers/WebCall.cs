@@ -99,7 +99,7 @@ namespace GanPlanRhino
             {
                 //The input is coming in from 0-300
                 //This correlates with roughly 20 feet
-                double scaledToFeet = input / 10;
+                double scaledToFeet = input / 8;
 
                 UnitSystem currentDocUnits = RhinoDoc.ActiveDoc.ModelUnitSystem;
                 double unitSystemScaler = RhinoMath.UnitScale(UnitSystem.Feet, currentDocUnits);
