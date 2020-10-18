@@ -40,7 +40,7 @@ namespace GanPlanRhino
         private void InitializeComponent()
         {
             OpenWebPage = new RelayCommand<object>(obj => {
-                System.Diagnostics.Process.Start("https://optimus.emptybox.io/");
+                System.Diagnostics.Process.Start("https://ganplan.emptybox.io/");
                 message.Text = "After Selecting a Scheme on the web, bring it into Rhino with an API call. ";
             });
 
