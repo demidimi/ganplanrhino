@@ -9,6 +9,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Rhino.Geometry;
 using System.Net.Http;
+using System.Drawing;
 
 namespace GanPlanRhino
 {
@@ -77,11 +78,15 @@ namespace GanPlanRhino
                 //Plane tempBasePlane = new Plane(new Point3d(0, 0, drawHeightTest), new Vector3d(0, 0, 1));
                 //drawHeightTest += 24;
 
-                Rectangle3d oneRectangle = new Rhino.Geometry.Rectangle3d(basePlane, myRoom.cornerA, myRoom.cornerB);
+                Rectangle3d oneRectangle = new Rectangle3d(basePlane, myRoom.cornerA, myRoom.cornerB);
+                
                 LayerHelper.BakeObjectToLayer(oneRectangle.ToPolyline().ToPolylineCurve(), myRoom.room, parentLayerName);
+                
+                Color layerColor = System.Drawing.ColorTranslator.FromHtml(myRoom.roomColor);
+                LayerHelper.ConfirmLayerColor(layerColor, myRoom.room, parentLayerName);
             }
 
-            Rhino.RhinoDoc.ActiveDoc.Views.Redraw();
+            RhinoDoc.ActiveDoc.Views.Redraw();
         }
 
         //Classes that are auto-populated by Json serialization
@@ -95,7 +100,7 @@ namespace GanPlanRhino
                 //This correlates with roughly 20 feet
                 double scaledToFeet = input / 10;
 
-                UnitSystem currentDocUnits = Rhino.RhinoDoc.ActiveDoc.ModelUnitSystem;
+                UnitSystem currentDocUnits = RhinoDoc.ActiveDoc.ModelUnitSystem;
                 double unitSystemScaler = RhinoMath.UnitScale(UnitSystem.Feet, currentDocUnits);
 
                 return scaledToFeet * unitSystemScaler;
