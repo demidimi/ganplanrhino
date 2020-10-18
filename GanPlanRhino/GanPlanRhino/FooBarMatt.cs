@@ -106,9 +106,10 @@ namespace GanPlanRhino
 
             Rhino.DocObjects.Tables.LayerTable layerTable = Rhino.RhinoDoc.ActiveDoc.Layers;
             int parentLayerIndex = layerTable.FindByFullPath(parentLayerName, -1);
-            
-            
 
+
+
+            int i = 0;
 
             foreach (Room myRoom in myResponseAsObjects.data.rooms)
             {
@@ -116,7 +117,8 @@ namespace GanPlanRhino
                 Rhino.Geometry.Point3d cornerA = new Rhino.Geometry.Point3d(myRoom.rectangle[0][0], myRoom.rectangle[0][1], 0);
                 Rhino.Geometry.Point3d cornerB = new Rhino.Geometry.Point3d(myRoom.rectangle[1][0], myRoom.rectangle[1][1], 0);
                 Rectangle3d oneRectangle = new Rhino.Geometry.Rectangle3d(basePlane, cornerA, cornerB);
-                LayerHelper.BakeObjectToLayer(oneRectangle.ToPolyline().ToPolylineCurve(), myRoom.room, parentLayerName);
+                LayerHelper.BakeObjectToLayer(oneRectangle.ToPolyline().ToPolylineCurve(), i + "_" + myRoom.room, parentLayerName);
+                i++;
             }
 
             Rhino.RhinoDoc.ActiveDoc.Views.Redraw();
