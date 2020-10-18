@@ -96,6 +96,7 @@ namespace GanPlanRhino
                 LayerHelper.BakeObjectToLayer(Extrusion.Create(wallLine, 20, false).ToBrep(), "Walls", schemeName);
 
             }
+            Rhino.RhinoDoc.ActiveDoc.Views.Redraw();
 
         }
         public static void PlaceDoorsAt(string schemeName)
