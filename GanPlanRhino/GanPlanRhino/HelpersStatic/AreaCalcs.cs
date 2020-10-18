@@ -61,7 +61,7 @@ namespace GanPlanRhino
             Point3d pt = curve.PointAt(param);
             foreach (Point3d point in oldPts)
             {
-                if (pt.DistanceTo(point) < 10)
+                if (pt.Y == point.Y && Math.Abs(pt.X - point.X) <25)
                 {
                     pt = pt + new Point3d(0, 5, 0);
                 }

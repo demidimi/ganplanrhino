@@ -69,7 +69,7 @@ namespace GanPlanRhino
             
             PlaceDoors = new RelayCommand<object>(obj => { Doors.PlaceDoorsAt(schemeNameBox.Text); });
             
-            Make3DGeometry = new RelayCommand<object>(obj => { message.Text = "Make3DGeometry"; });
+            Make3DGeometry = new RelayCommand<object>(obj => { Doors.Make3d(schemeNameBox.Text);  });
             #endregion
 
 
@@ -179,7 +179,7 @@ namespace GanPlanRhino
         private static void UpdateArea(string layerPath, Label area)
         {
             List<int> layerIndexs;
-            List<Curve> curves = LayerHelper.GetCurvesFrom(
+            List<Curve> curves = LayerHelper.GetCurvesFromChild(
                         layerPath, out layerIndexs);
             List<int> layerIds;
 
@@ -208,7 +208,7 @@ namespace GanPlanRhino
             string layerName;
 
             //get curves from the specific layer - rectangles
-            c = LayerHelper.GetCurvesFrom(layerPath, out layerIndexs);
+            c = LayerHelper.GetCurvesFromChild(layerPath, out layerIndexs);
 
             //split curves and bake to target layer
             splitCurves = Intersect.IntersectCurves(c, layerIndexs, out layerIds);
