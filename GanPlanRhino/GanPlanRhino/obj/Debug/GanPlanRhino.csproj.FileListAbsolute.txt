@@ -15,3 +15,11 @@ C:\Users\lcurtis\Documents\GitHub\ganplanrhino\GanPlanRhino\GanPlanRhino\obj\Deb
 C:\Users\lcurtis\Documents\GitHub\ganplanrhino\GanPlanRhino\GanPlanRhino\obj\Debug\GanPlanRhino.csproj.CopyComplete
 C:\Users\lcurtis\Documents\GitHub\ganplanrhino\GanPlanRhino\GanPlanRhino\obj\Debug\GanPlanRhino.dll
 C:\Users\lcurtis\Documents\GitHub\ganplanrhino\GanPlanRhino\GanPlanRhino\obj\Debug\GanPlanRhino.pdb
+C:\Users\mbreau\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\obj\Debug\GanPlanRhino.csprojAssemblyReference.cache
+C:\Users\mbreau\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\obj\Debug\GanPlanRhino.dll
+C:\Users\mbreau\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\obj\Debug\GanPlanRhino.pdb
+C:\Users\mbreau\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\bin\GanPlanRhino.dll
+C:\Users\mbreau\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\bin\GanPlanRhino.pdb
+C:\Users\mbreau\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\bin\Newtonsoft.Json.dll
+C:\Users\mbreau\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\bin\Newtonsoft.Json.xml
+C:\Users\mbreau\source\repos\ganplanrhino\GanPlanRhino\GanPlanRhino\obj\Debug\GanPlanRhino.csproj.CopyComplete

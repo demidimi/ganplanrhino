@@ -54,11 +54,13 @@
       <HintPath>C:\Program Files\Rhino 6\System\Rhino.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AreaCalc.cs" />
     <Compile Include="AreaCalculation.cs" />
     <Compile Include="Doors.cs" />
+    <Compile Include="FooBarMatt.cs" />
     <Compile Include="Intersect.cs" />
     <Compile Include="LayerHelper.cs" />
     <Compile Include="EtoPanels\EtoPanelGanPlan.cs" />
