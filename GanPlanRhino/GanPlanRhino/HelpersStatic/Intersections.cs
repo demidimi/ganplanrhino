@@ -25,25 +25,35 @@ namespace GanPlanRhino
             RhinoApp.WriteLine("First curve added");
             for (int i = 1; i < curveList.Count; i += 1)
             {
+                RhinoApp.WriteLine("...............");
+                RhinoApp.WriteLine("Trimming curve " + i.ToString() + ". " + splitCurves.Count().ToString()+ " curves in trimming set");
                 Curve[] newCurve = Curve.CreateBooleanDifference(curveList[i], splitCurves, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance);
 
                 //odd error where it is creating a second trim that it should not
                 //BUG FIX: check area of trimmed closed curves. If inside original curveList[i], it's good. Otherwise remove.
-
-                foreach (Curve split in newCurve)
+                //BUG FIX: If the boolean intersection returns nothing, add the original curve.
+                bool isEmpty = !newCurve.Any();
+                if(isEmpty)
                 {
-                    trimPt = Rhino.Geometry.AreaMassProperties.Compute(split).Centroid;
-                    p = Rhino.Geometry.Plane.WorldXY;
-                    contains = curveList[i].Contains(trimPt, p, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance).ToString();               
-                    RhinoApp.WriteLine(contains);
-
-                    if (contains == "Inside" || contains == "Coincident")
+                    splitCurves.Add(curveList[i]);
+                    layerIds.Add(layerIndexs[i]);
+                    RhinoApp.WriteLine("Boolean intersection empty. Original curve " + i.ToString() + " added");
+                }
+                else
+                    foreach (Curve split in newCurve)
                     {
-                        splitCurves.Add(split);
-                        layerIds.Add(layerIndexs[i]);
-                        RhinoApp.WriteLine("Part of curve " + i.ToString() + " trimmed and added");
-                    }
-                }                 
+                        trimPt = Rhino.Geometry.AreaMassProperties.Compute(split).Centroid;
+                        p = Rhino.Geometry.Plane.WorldXY;
+                        contains = curveList[i].Contains(trimPt, p, RhinoDoc.ActiveDoc.ModelAbsoluteTolerance).ToString();               
+                        RhinoApp.WriteLine(contains);
+
+                        if (contains == "Inside" || contains == "Coincident")
+                        {
+                            splitCurves.Add(split);
+                            layerIds.Add(layerIndexs[i]);
+                            RhinoApp.WriteLine("Trim is " + contains+ ". Trim of curve " + i.ToString() + " added");
+                        }
+                    }                 
                 
             }
             return splitCurves;
